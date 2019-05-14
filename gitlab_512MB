@@ -1,0 +1,35 @@
+  * [Follow the 1-click install method](https://www.digitalocean.com/community/tutorials/how-to-use-the-gitlab-one-click-install-image-to-manage-git-repositories) and *choose the 1GB droplet per the instructions*. We'll resize it down to 512MB soon.
+  * Once you've logged in for the first time, follow the [502 Bad Gateway Error instructions](https://www.digitalocean.com/community/tutorials/how-to-set-up-gitlab-as-your-very-own-private-github-clone). I've copied the instructions below for reference.
+  * Shut down your droplet and resize it to 512MB!
+
+---
+
+## 502 Bad Gateway Error
+
+The quick fix is to run the following:
+
+```bash
+sudo dd if=/dev/zero of=/swapfile bs=1024 count=1024k
+sudo mkswap /swapfile
+sudo swapon /swapfile
+```
+
+Your swapfile is now running and active, but to set it so that it's activated on each boot we need to edit /etc/fstab:
+
+```bash
+sudo nano /etc/fstab
+```
+
+Paste the following onto the bottom of the file:
+
+```bash
+/swapfile       none    swap    sw      0       0 
+```
+
+Now restart your VPS:
+
+```bash
+sudo restart
+```
+
+Wait a minute or two for your VPS to reboot, and then try GitLab again. If it doesn't work the first time, refresh the Bad Gateway page a couple of times, and you should soon see the GitLab login page. 
